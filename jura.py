@@ -28,19 +28,26 @@ def encodebyte(bin):
     return chr(bs & 0xFF000000 >> 24) + chr(bs & 0x00FF0000 >> 16) + chr(bs & 0x0000FF00 >> 8) + chr(bs & 0x000000FF)
 
 cmdstr = "RE:31\r\n"
+# cmdstr = "AN:02\r\n"
 
 serialport = serial.Serial('/dev/ttyAMA0', 9600)
 serialport.open()
 
 # write machine code
+
+print "Jura Hacking nnngnggg - sending " + cmdstr
+
 for c in cmdstr:
-    serialport.write(encodebyte(c))
-    time.sleep(8) # 8ms break between bytegroups
+    ec = encodebyte(c)
+    print ".. sending " + ec
+    serialport.write(ec)
+    time.sleep(8 / 1000) # 8ms break between bytegroups
 
 # show results
 try:
-    while true:
-        response = serialport.readline()
-        print response
+    print "Reading response: "
+    while True:
+        response = serialport.read()
+        print hex(ord(response))
 except KeyboardInterrupt:
     serialport.close()
