@@ -4,6 +4,7 @@ import sys
 import serial
 import time
 import struct
+import binascii
 
 # encode a byte to jura-encoding
 # Information only in bit 2 and 5, all other bits are 1
@@ -11,11 +12,18 @@ import struct
 # MSB.....LSB
 # UART byte 33221100
 # bit 52525252
+
+# 76543210
+# 11x11x11
+# 11011011
+
+# TODO
+def decodequad(bin):
+    return (bin[0] & 0x20) << 2 | (bin[0] & 0x04) << 6 | (bin[1] & 0x20) | (bin[1] & 0x04) << 2 | (bin[2] & 0x20) >> 2 | (bin[2] & 0x04) | (bin[3] & 0x20) >> 6 | (bin[3] & 0x04) >> 2
+
 def encodebyte(bin):
     bs = 0xDADADADA # template
-
     b = struct.unpack("B", bin)[0]
-
     bs |= ((b & 0x80) >> 2) << 24
     bs |= ((b & 0x40) >> 4) << 24
     bs |= ((b & 0x20)) << 16
@@ -24,18 +32,35 @@ def encodebyte(bin):
     bs |= ((b & 0x04)) << 8
     bs |= ((b & 0x02) << 4)
     bs |= ((b & 0x01) << 2)
+    return struct.pack("I", bs)
 
-    return chr(bs & 0xFF000000 >> 24) + chr(bs & 0x00FF0000 >> 16) + chr(bs & 0x0000FF00 >> 8) + chr(bs & 0x000000FF)
+v = bytearray()
+for c in "A":
+    v.extend(encodebyte(c))
+
+print ' '.join(format(x, 'b') for x in v)
+
+c = decodequad(v)
+print repr(c)
+print chr(c)
+
+#print repr(c, 'hex')
+#print " .. check: {0:b}".format(encoded)
+#binascii.hexlify(encoded)
 
 cmdstr = "RE:31\r\n"
 # cmdstr = "AN:02\r\n"
 
-serialport = serial.Serial('/dev/ttyAMA0', 9600)
-serialport.open()
+try:
+    serialport = serial.Serial('/dev/ttyAMA0', 9600)
+    serialport.open()
+except:
+    print "Geen serial port naar machine hepniedoenie"
+    sys.exit()
 
 # write machine code
 
-print "Jura Hacking nnngnggg - sending " + cmdstr
+print "Jura Hacking - sending 0x" + binascii.hexlify(cmdstr)
 
 for c in cmdstr:
     ec = encodebyte(c)
