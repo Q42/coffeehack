@@ -13,11 +13,6 @@ import binascii
 # UART byte 33221100
 # bit 52525252
 
-# 76543210
-# 11x11x11
-# 11011011
-
-# TODO
 def decodequad(bin):
     return (bin[0] & 0x20) << 2 | (bin[0] & 0x04) << 6 | (bin[1] & 0x20) | (bin[1] & 0x04) << 2 | (bin[2] & 0x20) >> 2 | (bin[2] & 0x04) | (bin[3] & 0x20) >> 6 | (bin[3] & 0x04) >> 2
 
@@ -40,39 +35,38 @@ for c in "A":
 
 print ' '.join(format(x, 'b') for x in v)
 
-c = decodequad(v)
-print repr(c)
-print chr(c)
-
-#print repr(c, 'hex')
-#print " .. check: {0:b}".format(encoded)
-#binascii.hexlify(encoded)
-
-cmdstr = "RE:31\r\n"
+cmdstr = "RE:31\r\n"    
 # cmdstr = "AN:02\r\n"
 
 try:
     serialport = serial.Serial('/dev/ttyAMA0', 9600)
     serialport.open()
 except:
-    print "Geen serial port naar machine hepniedoenie"
+    print "Geen serial port naar machine hepniedoenie bye bye"
     sys.exit()
 
 # write machine code
-
-print "Jura Hacking - sending 0x" + binascii.hexlify(cmdstr)
+print "Jura Hacking - sending " + cmdstr
 
 for c in cmdstr:
     ec = encodebyte(c)
-    print ".. sending " + ec
+    print ".. sending 0x" + binascii.hexlify(ec)
     serialport.write(ec)
     time.sleep(8 / 1000) # 8ms break between bytegroups
 
 # show results
+
+rp = bytearray()
 try:
-    print "Reading response: "
+    print "Reading response: ",
     while True:
         response = serialport.read()
-        print hex(ord(response))
+        print hex(ord(response)),
+        rp.extend(response)
+        if len(rp) >=28: 
+		break
 except KeyboardInterrupt:
     serialport.close()
+
+print
+print "Reply: " + chr(decodequad(rp))
