@@ -1,6 +1,6 @@
 import requests, json
 
-url = 'http://localhost:3000/api/coffeecups'
+url = 'http://iot-api.scalingo.io/api/coffeecups'
 data = json.dumps({
     'type': 'latte',
     'timestamp': 1435762371
