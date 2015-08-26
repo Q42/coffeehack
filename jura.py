@@ -115,6 +115,12 @@ r = receiveresponse()
 
 print r
 
+# green:  GND, RPI 06 -- orange - rechtsboven 1 (RS)
+# yellow: TXD, RPI 08 -- white  - rechtsboven 2 (RS)
+# red:    RXD, RPI 10 -- black  - rechtsboven 3 (RS)
+
+
+
 # show results
 #try:
 #    print "Reading response: "
