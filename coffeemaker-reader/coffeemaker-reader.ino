@@ -13,10 +13,11 @@ void setup() {
   mySerial.begin(9600);
 }
 
-int getCounter(int offset) 
+// read a Jura counter from EEPROM, given a memory offset
+int getCounter(int offset)
 {
   if(offset > 0x800) return -1;
-  
+
   hexval = String(offset, HEX);
   while(hexval.length() < 3) hexval = "0" + hexval;
 
@@ -28,7 +29,8 @@ int getCounter(int offset)
   toCoffeemaker(hexval[1]); delay(inter);
   toCoffeemaker(hexval[2]); delay(inter);
   toCoffeemaker(0x0D); delay(inter);
-  toCoffeemaker(0x0A); delay(100);
+  toCoffeemaker(0x0A); delay(100); //  allow for processing time to prevent
+                                   // garbage from still sitting on the serial buffer
 
   String r = "";
 
@@ -41,13 +43,14 @@ int getCounter(int offset)
     r += char(fromCoffeemaker(d0,d1,d2,d3));
   }
 
+  // r should be in the form: 're:XXXX\r\n', 9 bytes
   if (r.length() == 9) {
     String hex = r.substring(3,7);
     int number = (int)strtol(hex.c_str(), NULL, 16);
     return number;
   } else {
     return -1;
-  }  
+  }
 }
 
 void loop() {

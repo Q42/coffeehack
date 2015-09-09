@@ -78,6 +78,11 @@ RISTRETTO: 2e WORD, 0x281
 0x281: totaal aantal ristretto
 0x282: totaal aantal koffie
 0x284: totaal aantal cappuccino
+0x285: totaal aantal latte macchiato
+0x286: totaal aantal macchiato
+0x288: totaal aantal melkkoffie
+0x293: totaal aantal 'twee koffie'
+0x291: totaal aantal 'twee espresso'
 
 
 0800
@@ -90,7 +95,7 @@ RISTRETTO: 2e WORD, 0x281
 checken dan response is in vorm:
 
 ic:FFFFF
-zo niet, ignore! (er zitten tropbytes bij)
+zo niet, ignore! (er zitten troepbytes bij)
 
 1: 1 -
 1: 2 -
