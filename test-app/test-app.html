@@ -1,0 +1,20 @@
+<head>
+  <title>test-app</title>
+</head>
+
+<body>
+  <h1>Welcome to the coffee test app!</h1>
+
+  {{> coffeecups}}
+</body>
+
+<template name="coffeecups">
+  <p>
+    In total we have {{counter}} coffeecups,
+    {{counter_020}} in Amsterdam
+    and {{counter_070}} in The Hague
+  </p>
+  <p>
+    The most recent order was a(n) {{latest.type}} from {{latest.location}}
+  </p>
+</template>
