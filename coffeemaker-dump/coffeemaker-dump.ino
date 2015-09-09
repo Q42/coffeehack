@@ -29,6 +29,8 @@ byte x3;
 byte x4;
 byte intra = 1;
 byte inter = 7;
+String hexval;
+byte c2, c1, c0;
 
 void setup() {
   Serial.begin(9600);
@@ -37,45 +39,47 @@ void setup() {
 
 void loop() {
 
-  if(Serial.available()) {
-    byte c = Serial.read();
-    toCoffeemaker(c);
-  } 
-  
-  byte d0; byte d1; byte d2; byte d3;
-  while(mySerial.available()) {
-    delay (intra); byte d0 = mySerial.read();
-    delay (intra); byte d1 = mySerial.read();
-    delay (intra); byte d2 = mySerial.read();
-    delay (intra); byte d3 = mySerial.read();
-    delay (inter);
-
-    // Print hex and bin values of received UART bytes
-    //Serial.print(d0, HEX); Serial.print(" ");
-    //Serial.print(d1, HEX); Serial.print(" ");
-    //Serial.print(d2, HEX); Serial.print(" ");
-    //Serial.print(d3, HEX); Serial.print("\t");
-
-    //Serial.print(d0, BIN); Serial.print(" ");
-    //Serial.print(d1, BIN); Serial.print(" ");
-    //Serial.print(d2, BIN); Serial.print(" ");
-    //Serial.print(d3, BIN); Serial.print("\t");
-    fromCoffeemaker(d0,d1,d2,d3);
+  for(int i=0; i<0x400 / 16; i++) 
+  {
+    toCoffeemaker('R'); delay(inter);
+    toCoffeemaker('T'); delay(inter);
+    toCoffeemaker(':'); delay(inter);
+    toCoffeemaker('0'); delay(inter);
+    hexval = String(i * 16, HEX);
+    while(hexval.length() < 3) hexval = "0"+hexval;
+    toCoffeemaker(hexval[0]); delay(inter);
+    toCoffeemaker(hexval[1]); delay(inter);
+    toCoffeemaker(hexval[2]); delay(inter);
+    toCoffeemaker(0x0D); delay(inter);
+    toCoffeemaker(0x0A); delay(100);
+   
+    byte d0; byte d1; byte d2; byte d3;
+    while(mySerial.available()) {
+      delay (intra); byte d0 = mySerial.read();
+      delay (intra); byte d1 = mySerial.read();
+      delay (intra); byte d2 = mySerial.read();
+      delay (intra); byte d3 = mySerial.read();
+      delay (inter);
+    
+      // Print hex and bin values of received UART bytes
+      //Serial.print(d0, HEX); Serial.print(" ");
+      //Serial.print(d1, HEX); Serial.print(" ");
+      //Serial.print(d2, HEX); Serial.print(" ");
+      //Serial.print(d3, HEX); Serial.print("\t");
+    
+      //Serial.print(d0, BIN); Serial.print(" ");
+      //Serial.print(d1, BIN); Serial.print(" ");
+      //Serial.print(d2, BIN); Serial.print(" ");
+      //Serial.print(d3, BIN); Serial.print("\t");
+      fromCoffeemaker(d0,d1,d2,d3);
+    }
   }
-  //Serial.println();
-  //delay(50000);
+  Serial.println("Done");
+  delay(50000);
 }
 
 // fromCoffeemaker receives a 4 byte UART package from the coffeemaker and translates them to a single ASCII byte
 byte fromCoffeemaker(byte x0, byte x1, byte x2, byte x3) {
-  // Print received UART bytes on console
-  //    Serial.write(x0);
-  //    Serial.write(x1);
-  //    Serial.write(x2);
-  //    Serial.write(x3);
-  //    Serial.println();
-
-  // Reads coding Bits of the 4 byte package and writes them into a new character (translates to ASCII)
   bitWrite(x4, 0, bitRead(x0,2));
   bitWrite(x4, 1, bitRead(x0,5));
   bitWrite(x4, 2, bitRead(x1,2));
@@ -86,7 +90,6 @@ byte fromCoffeemaker(byte x0, byte x1, byte x2, byte x3) {
   bitWrite(x4, 7, bitRead(x3,5));
   // Print translated ASCII character
   Serial.print(char(x4));
-  //Serial.print(x4, BIN);
 }
 
 // toCoffeemaker translates an ASCII character to 4 UART bytes and sends them to the coffeemaker
@@ -106,18 +109,7 @@ byte toCoffeemaker(byte zeichen) {
   bitWrite(z3, 2, bitRead(zeichen,6));
   bitWrite(z3, 5, bitRead(zeichen,7));
 
-  // Prints hex and bin values of translated UART bytes and the source ASCII character
-  //Serial.print(z0, HEX); Serial.print(" ");
-  //Serial.print(z1, HEX); Serial.print(" ");
-  //Serial.print(z2, HEX); Serial.print(" ");
-  //Serial.print(z3, HEX); Serial.print("\t");
-
-  //Serial.print(z0, BIN); Serial.print(" ");
-  //Serial.print(z1, BIN); Serial.print(" ");
-  //Serial.print(z2, BIN); Serial.print(" ");
-  //Serial.print(z3, BIN); Serial.print("\t");
-
-  Serial.write(zeichen);
+  //Serial.write(zeichen);
   //Serial.println();
 
   // Sends a 4 byte package to the coffeemaker

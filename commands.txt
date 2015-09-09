@@ -48,11 +48,71 @@ steam valve off                         FN:27
 cappuuccino valve on                    FN:28
 cappuuccino valve of                    FN:29
 brewgroup put trester of                FN:0E
-read word in EEPROM (type address)      RE:
-read line in EEPROM (type address)      RT:
+read word in EEPROM (type address)      RE:xxxx read address eg RE:0004, gets you 4 bytes
+read line in EEPROM (type address)      RT:xxxx same, but gets you 16 bytes. use xxxx in multiples of 4
 type of machine?                        TY:   - EF658M V03.03
 write word in EEPROM	                  WE:
 read machine type	                      RE:31 - Doesn't work
 set machine type	                      WE:31,
 read inputs	                            IC:   - 0301EE on each tried value
 read RAM                                RR:   - Doesn't work
+
+INPUTS (IC)
+- normal: 0301EE
+- residubak eruit: 0303EE
+- 000D
+- 1C01
+ -1B0DCE
+- 1B01EE  --
+
+RT: loopt van
+
+0000
+
+Totalen,
+
+KOFFIE: 3e WORD op regel 41 van de dump, 0x288
+RISTRETTO: 2e WORD, 0x281
+
+0x280: totaal aantal espresso
+0x281: totaal aantal ristretto
+0x282: totaal aantal koffie
+0x284: totaal aantal cappuccino
+
+
+0800
+
+
+0000 0000
+0003 01EE
+8765 4321
+
+checken dan response is in vorm:
+
+ic:FFFFF
+zo niet, ignore! (er zitten tropbytes bij)
+
+1: 1 -
+1: 2 -
+1: 4 -
+1: 8 -
+
+2: 1 -
+2: 2 - 1: fan off, 0: fan on
+2: 4 -
+2: 8 -
+
+3: 1 -
+3: 2 - 1: residubak mist
+3: 4 -
+3: 8 -
+
+4: 1 -
+4: 2 -
+4: 4 -
+4: 8 -
+
+5: 1 -
+5: 2 -
+5: 4 -
+5: 8 -

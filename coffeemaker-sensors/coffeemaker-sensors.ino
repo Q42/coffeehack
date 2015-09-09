@@ -36,12 +36,18 @@ void setup() {
 }
 
 void loop() {
-
-  if(Serial.available()) {
+  
+  /*if(Serial.available()) {
     byte c = Serial.read();
     toCoffeemaker(c);
-  } 
+  }*/
   
+  toCoffeemaker('I'); delay(inter);
+  toCoffeemaker('C'); delay(inter);
+  toCoffeemaker(':'); delay(inter);
+  toCoffeemaker(0x0D);delay(inter);
+  toCoffeemaker(0x0A);delay(inter);
+
   byte d0; byte d1; byte d2; byte d3;
   while(mySerial.available()) {
     delay (intra); byte d0 = mySerial.read();
@@ -63,7 +69,8 @@ void loop() {
     fromCoffeemaker(d0,d1,d2,d3);
   }
   //Serial.println();
-  //delay(50000);
+  delay(25);
+
 }
 
 // fromCoffeemaker receives a 4 byte UART package from the coffeemaker and translates them to a single ASCII byte
@@ -117,7 +124,7 @@ byte toCoffeemaker(byte zeichen) {
   //Serial.print(z2, BIN); Serial.print(" ");
   //Serial.print(z3, BIN); Serial.print("\t");
 
-  Serial.write(zeichen);
+  //Serial.write(zeichen);
   //Serial.println();
 
   // Sends a 4 byte package to the coffeemaker
