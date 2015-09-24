@@ -1,20 +1,28 @@
 <head>
   <title>test-app</title>
+  <style>
+    * { font-family: sans-serif; color: white; }
+    body { padding: 2em; background-color: brown; }
+    ul { line-height: 2em; }
+
+  </style>
 </head>
 
 <body>
-  <h1>Welcome to the coffee test app!</h1>
+  <h1>Q42 Koffieteller</h1>
 
   {{> coffeecups}}
 </body>
 
 <template name="coffeecups">
-  <p>
-    In total we have {{counter}} coffeecups,
-    {{counter_020}} in Amsterdam
-    and {{counter_070}} in The Hague
-  </p>
-  <p>
-    The most recent order was a(n) {{latest.type}} from {{latest.location}}
-  </p>
+  <ul>
+    <li>Totaal geteld: {{counter}} ({{counter_020}} in Amsterdam, {{counter_070}} in Den Haag)</li>
+    <li>Amsterdam
+      <ul>
+        <li>Totaal vandaag: {{daycounter_020}}</li>
+        <li>Eerste kop: {{first_020.published_at}}, dat was een {{first_020.data}}</li>
+        <li>Meest recente kop: {{latest_020.published_at}}, dat was een {{latest_020.data}}</li>
+      </ul>
+    </li>
+  </ul>
 </template>
