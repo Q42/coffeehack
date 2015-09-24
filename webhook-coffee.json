@@ -1,0 +1,9 @@
+{
+    "eventName": "coffeecups",
+    "url": "http://iot-api.scalingo.io/api/coffeecups",
+    "requestType": "POST",
+    "json": {
+      "location": "q020"
+    },
+    "mydevices": true
+}
