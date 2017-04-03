@@ -98,7 +98,7 @@ void loop() {
 void trigger(String ctype)
 {
   Serial.println(" -- triggering webhook for a " + ctype);
-  Spark.publish("coffeecups", ctype, 60, PRIVATE);
+  Spark.publish("store-coffee", ctype, 60, PRIVATE);
 }
 
 byte fromCoffeemaker(byte x0, byte x1, byte x2, byte x3) {
