@@ -1,6 +1,6 @@
 {
-    "eventName": "coffeecups",
-    "url": "http://iot-api.scalingo.io/api/coffeecups",
+    "eventName": "store-coffee",
+    "url": "https://iot-api.firebaseio.com/coffee.json",
     "requestType": "POST",
     "json": {
       "location": "q020"
